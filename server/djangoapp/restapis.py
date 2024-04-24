@@ -31,7 +31,6 @@ def get_request(endpoint, **kwargs):
             return response.json()
         else:
             print(f"Request failed with status code: {response.status_code}")
-            # Raise an exception or handle non-200 status codes based on your requirements
             response.raise_for_status()
     except requests.exceptions.RequestException as e:
         # Handle network-related errors or HTTP request failures
@@ -62,14 +61,13 @@ def post_review(data_dict):
     request_url = backend_url+"/insert_review"
     try:
         response = requests.post(request_url, json=data_dict)
-        
+
         # Check if the request was successful (status code 200)
         if response.status_code == 200:
             return response.json()
         else:
             # If the request was not successful, handle the error
             print(f"Request failed with status code: {response.status_code}")
-            # Optionally raise an exception or handle the error based on your requirements
             response.raise_for_status()
     except requests.exceptions.RequestException as e:
         # Handle network-related errors or HTTP request failures
