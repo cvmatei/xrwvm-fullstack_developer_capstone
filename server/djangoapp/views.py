@@ -69,7 +69,7 @@ def registration(request):
         login(request, user)
         data = {"userName": username, "status": "Authenticated"}
         return JsonResponse(data)
-    else :
+    else:
         data = {"userName": username, "error": "Already Registered"}
         return JsonResponse(data)
 
@@ -84,7 +84,7 @@ def get_cars(request):
     cars = []
     for car_model in car_models:
         cars.append({
-            "CarModel": car_model.name, 
+            "CarModel": car_model.name,
             "CarMake": car_model.car_make.name})
     return JsonResponse({"CarModels": cars})
 
@@ -125,6 +125,7 @@ def get_dealer_details(request, dealer_id):
     else:
         return JsonResponse({"status": 400, "message": "Bad Request"})
 
+
 # The add_review method checks if the user is authenticated before calling
 # the post_review method
 def add_review(request):
@@ -134,6 +135,6 @@ def add_review(request):
             response = post_review(data)
             return JsonResponse({"status": 200})
         except:
-            return JsonResponse({"status": 401, "message": "Error in posting review"})
+            return JsonResponse({"status": 401, "message": "Error posting review"})
     else:
         return JsonResponse({"status": 403, "message": "Unauthorized"})
