@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from django.contrib.auth.models import User
-from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth import login, authenticate
 import logging
 import json
 from django.views.decorators.csrf import csrf_exempt
@@ -52,9 +52,10 @@ def registration(request):
         # Check if user already exists
         User.objects.get(username=username)
         username_exist = True
-    except:
+    except Exception as e:
         # If not, simply log this is a new user
         logger.debug("{} is new user".format(username))
+        print(f"Error: {e}")
 
     # If it is a new user
     if not username_exist:
@@ -129,12 +130,13 @@ def get_dealer_details(request, dealer_id):
 # The add_review method checks if the user is authenticated before calling
 # the post_review method
 def add_review(request):
-    if (request.user.is_anonymous == False):
-        data = json.loads(request.body)
+    if not request.user.is_anonymous:
         try:
+            data = json.loads(request.body)
             response = post_review(data)
+            print(response)
             return JsonResponse({"status": 200})
-        except:
-            return JsonResponse({"status": 401, "message": "Error posting review"})
+        except Exception as e:
+            return JsonResponse({"status": 500, "message": str(e)})
     else:
         return JsonResponse({"status": 403, "message": "Unauthorized"})

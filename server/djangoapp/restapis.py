@@ -25,10 +25,23 @@ def get_request(endpoint, **kwargs):
     try:
         # Call get method of requests library with URL and parameters
         response = requests.get(request_url)
-        return response.json()
-    except:
-        # If any error occurs
-        print("Network exception occurred")
+
+        # Check if the response was successful (status code 200)
+        if response.status_code == 200:
+            return response.json()
+        else:
+            print(f"Request failed with status code: {response.status_code}")
+            # Raise an exception or handle non-200 status codes based on your requirements
+            response.raise_for_status()
+    except requests.exceptions.RequestException as e:
+        # Handle network-related errors or HTTP request failures
+        print(f"Error during request: {e}")
+    except ValueError as e:
+        # Handle JSON decoding errors if response is not valid JSON
+        print(f"Error decoding JSON response: {e}")
+    except Exception as e:
+        # Handle any other unexpected exceptions
+        print(f"An unexpected error occurred: {e}")
 
 
 # The analyze_review_sentiment method calls the sentiment analyzer
@@ -49,7 +62,21 @@ def post_review(data_dict):
     request_url = backend_url+"/insert_review"
     try:
         response = requests.post(request_url, json=data_dict)
-        print(response.json())
-        return response.json()
-    except:
-        print("Network exception occurred")
+        
+        # Check if the request was successful (status code 200)
+        if response.status_code == 200:
+            return response.json()
+        else:
+            # If the request was not successful, handle the error
+            print(f"Request failed with status code: {response.status_code}")
+            # Optionally raise an exception or handle the error based on your requirements
+            response.raise_for_status()
+    except requests.exceptions.RequestException as e:
+        # Handle network-related errors or HTTP request failures
+        print(f"Error during request: {e}")
+    except ValueError as e:
+        # Handle JSON decoding errors if response is not valid JSON
+        print(f"Error decoding JSON response: {e}")
+    except Exception as e:
+        # Handle any other unexpected exceptions
+        print(f"An unexpected error occurred: {e}")
