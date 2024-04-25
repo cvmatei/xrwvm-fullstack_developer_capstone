@@ -60,21 +60,8 @@ def analyze_review_sentiments(text):
 def post_review(data_dict):
     request_url = backend_url+"/insert_review"
     try:
-        response = requests.post(request_url, json=data_dict)
-
-        # Check if the request was successful (status code 200)
-        if response.status_code == 200:
-            return response.json()
-        else:
-            # If the request was not successful, handle the error
-            print(f"Request failed with status code: {response.status_code}")
-            response.raise_for_status()
-    except requests.exceptions.RequestException as e:
-        # Handle network-related errors or HTTP request failures
-        print(f"Error during request: {e}")
-    except ValueError as e:
-        # Handle JSON decoding errors if response is not valid JSON
-        print(f"Error decoding JSON response: {e}")
+        response = requests.post(request_url,json=data_dict)
+        print(response.json())
+        return response.json()
     except Exception as e:
-        # Handle any other unexpected exceptions
-        print(f"An unexpected error occurred: {e}")
+        print("Network exception occurred" + str(e))
